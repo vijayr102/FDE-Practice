@@ -1,0 +1,20 @@
+[
+    {
+        "id": 1,
+        "customer": "John Doe",
+        "amount": 100.00,
+        "status": "paid"
+    },
+    {
+        "id": 2,
+        "customer": "Jane Smith",
+        "amount": 250.50,
+        "status": "unpaid"
+    },
+    {
+        "id": 3,
+        "customer": "John Doe",
+        "amount": 75.25,
+        "status": "paid"
+    }
+]
