@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <section>
+        <h1>Diabetes Patient Management</h1>
+        <form>
+            <div>
+                <label for="number"> Patient Number:</label>
+                <input type="text" name="number" placeholder="Enter your patient number" required>
+            </div>
+            <div>
+                <label for="age"> Age:</label>
+                <select name="age" required>
+                    <option value="">Select your age</option>
+                    <option value="20-30">20-30</option>
+                    <option value="31-40">31-40</option>
+                    <option value="41-50">41-50</option>
+                    <option value="51-60">51-60</option>
+                    <option value="61+">61+</option>
+                </select>
+            </div>
+            <div>
+                <label for="timeinhospital"> Time in Hospital:</label>
+                <input type="number" name="timeinhospital" placeholder="Enter time in hospital" required>
+            </div>
+            <div>
+                <label for="inpatientvisits"> In-Patient Visits:</label>
+                <input type="number" name="inpatientvisits" placeholder="Enter in-patient visits" required>
+            </div>
+            <div>
+                <label for="emergencyvisits"> Emergency Visits:</label>
+                <input type="number" name="emergencyvisits" placeholder="Enter emergency visits" required>
+            </div>
+            <div>
+                <label for="medications"> Medications:</label>
+                <input type="number" name="medications" placeholder="Enter number of medications" required>
+            </div>
+            <div>
+                <button type="submit">Submit</button>
+            </div>
+        </form>
+    </section>
+    <section>
+        <h2>Patient Data</h2>
+        <table border="1">
+            <thead>
+                <tr>
+                    <th>Patient Number</th>
+                    <th>Age</th>
+                    <th>Time in Hospital</th>
+                    <th>In-Patient Visits</th>
+                    <th>Emergency Visits</th>
+                    <th>Medications</th>
+                </tr>
+            </thead>
+            <tbody id="patient-data">
+                <!-- Patient data will be populated here -->
+            </tbody>
+        </table>
+</body>
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        margin: 20px;
+    }
+
+    h1, h2 {
+        color: #333;
+    }
+
+    form {
+        margin-bottom: 20px;
+        background-color: #ecb5b5;
+        padding: 20px;
+        border-radius: 5px;
+    }
+
+    form div {
+        margin-bottom: 10px;
+    }
+
+    label {
+        display: inline-block;
+        width: 150px;
+    }
+
+    input, select {
+        padding: 5px;
+        width: 200px;
+    }
+
+    button {
+        padding: 10px 20px;
+        background-color: #4CAF50;
+        color: white;
+        border: none;
+        cursor: pointer;
+    }
+
+    button:hover {
+        background-color: #45a049;
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    th, td {
+        padding: 10px;
+        text-align: left;
+    }
+
+    th {
+        background-color: #f2f2f2;
+    }
+
+</style>
+<script>
+    async function fetchData() {
+    const url = 'http://127.0.0.1:3003/encounters';
+    
+    try {
+        const response = await fetch(url);
+        
+        // Fetch does not automatically throw errors for 404 or 500 status codes
+        if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+        
+        const data = await response.json();
+        document.getElementById('patient-data').innerHTML = data.map(patient => `
+            <tr>
+                <td>${patient.patient_nbr}</td>
+                <td>${patient.age}</td>
+                <td>${patient.time_in_hospital}</td>
+                <td>${patient.number_inpatient}</td>
+                <td>${patient.number_emergency}</td>
+                <td>${patient.num_medications}</td>
+            </tr>
+        `).join('');
+        console.log(data);
+    } catch (error) {
+        console.error('There was a problem with the fetch operation:', error);
+    }
+}
+    // Call fetchData when the page loads
+window.addEventListener("DOMContentLoaded", fetchData);
+window.addEventListener("DOMContentLoaded", function() {
+    const form = document.querySelector("form");
+    form.addEventListener("submit", async function(event) {
+        event.preventDefault();
+        const formData = new FormData(form);
+        const data = Object.fromEntries(formData.entries());
+        
+        try {
+            const response = await fetch('http://127.0.0.1:3003/createencounters', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            });
+            const result = await response.json();
+            console.log(result);
+            form.reset();
+            fetchData(); // Refresh the table after submission
+        } catch (error) {
+            console.error('There was a problem with the fetch operation:', error);
+        }
+    });
+});
+
+</script>
+</html>
