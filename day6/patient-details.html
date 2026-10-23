@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Patient Details</title>
+</head>
+
+<body>
+    <h1>Patient Details</h1>
+    <section class="patient-details-section">
+        <h2>Details of Patient</h2>
+        <div id="patient-details">
+            <section class="Patient Intervention">
+                <form>
+                    <div class="field">
+                        <label for="interventionId">Intervention ID:</label>
+                        <input type="text" id="interventionId" name="interventionId">
+                    </div>
+                    <div class="field">
+                        <label for="encounterId">Encounter ID:</label>
+                        <input type="text" id="encounterId" name="encounterId">
+                    </div>
+                    <div class="field">
+                        <label for="status">Status:</label>
+                        <input type="text" id="status" name="status">
+                    </div>
+                    <div class="field">
+                        <label for="assignedTo">Assigned To:</label>
+                        <input type="text" id="assignedTo" name="assignedTo">
+                    </div>
+                    <div class="field">
+                        <label for="notes">Notes:</label>
+                        <textarea id="notes" name="notes"></textarea>
+                    </div>
+                    <div class="field">
+                        <label for="createdAt">Created At:</label>
+                        <input type="text" id="createdAt" name="createdAt">
+                    </div>
+                    <button class="btn btn-primary" type="submit">Update Intervention</button>
+                </form>
+            </section>
+        </div>
+    </section>
+    <section class="updated-interventions">
+        <table border="1" class="patient-table">
+            <thead>
+                <tr>
+                    <th>Intervention ID</th>
+                    <th>Encounter ID</th>
+                    <th>Status</th>
+                    <th>Assigned To</th>
+                    <th>Notes</th>
+                    <th>Created At</th>
+                </tr>
+            </thead>
+            <tbody id="updated-interventions">
+                <!-- Updated intervention data will be populated here -->
+            </tbody>
+    </section>
+    <section>
+        <a href="diabeticsPatientManagement.html">Back to Patient Management</a>
+    </section>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+
+        h1,
+        h2 {
+            color: #333;
+        }
+
+        .field {
+            margin-bottom: 10px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        input,
+        textarea {
+            width: 100%;
+            padding: 8px;
+            box-sizing: border-box;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 10px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+        .header {
+            margin-bottom: 20px;
+        }
+    </style>
+    <script>
+        async function fetchPatientDetails() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const patientId = urlParams.get('id');
+            if (!patientId) {
+                document.getElementById('patient-details').innerHTML = '<p>No patient ID provided.</p>';
+                return;
+            }
+            const response = await fetch(`http://127.0.0.1:3003/patients/${patientId}`);
+            const patient = await response.json();
+            document.getElementById('interventionId').value = patient.intervention_id || '';
+            document.getElementById('encounterId').value = patient.encounter_id || '';
+            document.getElementById('status').value = patient.status || '';
+            document.getElementById('assignedTo').value = patient.assigned_to || '';
+            document.getElementById('notes').value = patient.notes || '';
+            document.getElementById('createdAt').value = patient.created_at || '';
+        }
+
+        window.addEventListener("DOMContentLoaded", fetchPatientDetails);
+
+        document.querySelector('form').addEventListener('submit', async (event) => {
+            event.preventDefault();
+            const interventionData = {
+                intervention_id: document.getElementById('interventionId').value,
+                encounter_id: document.getElementById('encounterId').value,
+                status: document.getElementById('status').value,
+                assigned_to: document.getElementById('assignedTo').value,
+                notes: document.getElementById('notes').value,
+                created_at: document.getElementById('createdAt').value
+            };
+            try {
+                const response = await fetch(`http://127.0.0.1:3003/update-interventions/${interventionData.intervention_id}?assigned_to=${interventionData.assigned_to}`, {
+                    method: 'PATCH'
+                });
+                console.log('Update response status:', response.status);
+                let data = await response.json();
+               document.getElementById("updated-interventions").innerHTML = `
+                    <tr>
+                        <td>${data.intervention_id}</td>
+                        <td>${data.encounter_id}</td>
+                        <td>${data.status}</td>
+                        <td>${data.assigned_to}</td>
+                        <td>${data.notes}</td>
+                        <td>${data.created_at}</td>
+                    </tr>
+                `;
+                console.log(data);
+            } catch (error) {
+                console.error('There was a problem with the fetch operation:', error);
+            }
+
+        });
+    </script>
+</body>
+
+</html>

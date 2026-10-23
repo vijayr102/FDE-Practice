@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Diabetic Patient Management</title>
+</head>
+<body>
+    <h1>Patient Search</h1>
+    <section class="search-section">
+        <h2>Search for a Patient</h2>
+        <form id="searchForm">
+            <div class="field">
+                <label for="patientId">Patient ID:</label>
+                <input type="text" id="patientId" name="patientId">
+            </div>
+            <div class="field">
+                <label for="RiskLevel">Risk Level:</label>
+                <select id="RiskLevel" name="RiskLevel">
+                    <option value="">Select Risk Level</option>
+                    <option value="LOW">Low</option>
+                    <option value="MEDIUM">Medium</option>
+                    <option value="HIGH">High</option>
+                </select>
+            </div>
+            <div class="field">
+                <label for="riskScore">Risk Score:</label>
+                <input type="text" id="riskScore" name="riskScore"> 
+            </div>
+            <div class="field">
+                <button type="submit">Search</button>
+            </div>
+        </form>
+    </section>
+    <section>
+        <h2>Patient Data</h2>
+        <table border="1" class="patient-table">
+            <thead>
+                <tr>
+                    <th>Patient Number</th>
+                    <th>Age</th>
+                    <th>Time in Hospital</th>
+                    <th>In-Patient Visits</th>
+                    <th>Emergency Visits</th>
+                    <th>Medications</th>
+                </tr>
+            </thead>
+            <tbody id="patient-data">
+                <!-- Patient data will be populated here -->
+            </tbody>
+        </table>
+    </section>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        h1, h2 {
+            color: #333;
+        }
+        .search-section {
+            margin-bottom: 20px;
+            background-color: #aba6a6;
+            padding: 20px;
+        }
+        .field {
+            margin-bottom: 10px;
+        }
+        label {
+            display: inline-block;
+            width: 150px;
+        }
+
+        input, select {
+            padding: 5px;
+            width: 200px;
+        }
+        button {
+            padding: 5px 10px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        .patient-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        .patient-table th, .patient-table td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        .patient-table th {
+            background-color: #f2f2f2;
+        }
+    </style>
+    <script>
+        async function apiCallSearchPatient(
+    { patient_number, risk_score, risk_level }={}
+)  {
+    const url = new URL(`http://127.0.0.1:3003/searchPatient`);
+    if (patient_number) url.searchParams.append('patient_number', patient_number);
+    if (Number.isFinite(risk_score)) url.searchParams.append('risk_score', risk_score.toString());
+    if (risk_level) url.searchParams.append('risk_level', risk_level);
+
+    const response = await fetch(url);
+    console.log(response.status);
+    let data = await response.json();
+    document.getElementById('patient-data').innerHTML = data.map(patient => `
+            <tr>
+                <td><a href="patient-details.html?id=${patient.patient_nbr}">${patient.patient_nbr}</a></td>
+                <td>${patient.age}</td>
+                <td>${patient.time_in_hospital}</td>
+                <td>${patient.number_inpatient}</td>
+                <td>${patient.number_emergency}</td>
+                <td>${patient.num_medications}</td>
+            </tr>
+        `).join('');
+    console.log(data);
+}
+
+        document.getElementById('searchForm')?.addEventListener('submit', async (event) => {
+            event.preventDefault();
+            const patientId = (document.getElementById('patientId')).value;
+            const riskLevel = (document.getElementById('RiskLevel')).value;
+            const riskScore = parseFloat((document.getElementById('riskScore')).value);
+
+            await apiCallSearchPatient({ patient_number: patientId, risk_score: riskScore, risk_level: riskLevel });
+        });
+    </script>
+</body>
+</html>

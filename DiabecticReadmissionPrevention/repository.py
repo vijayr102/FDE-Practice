@@ -8,6 +8,24 @@ def get_encounters():
             encounters = cur.fetchall()
             return encounters
 
+def get_encounters(patient_number=None, risk_score=None, risk_level=None):
+    with get_connection() as conn:
+        with conn.cursor() as cur:
+            query = "SELECT * FROM encounters WHERE 1=1"
+            params = []
+            if patient_number:
+                query += " AND patient_nbr = %s"
+                params.append(patient_number)
+            if risk_score and risk_score != 'NaN':
+                query += " AND risk_score = %s"
+                params.append(risk_score)
+            if risk_level :
+                query += " AND risk_level = %s"
+                params.append(risk_level)
+            cur.execute(query, tuple(params))
+            encounters = cur.fetchall()
+            return encounters
+
 def get_encounter_by_id(encounter_id):
     with get_connection() as conn:
         with conn.cursor() as cur:
@@ -22,10 +40,16 @@ def get_care_queue():
             care_queue = cur.fetchall()
             return care_queue
 
-def get_intervention_by_id(intervention_id):
+def get_intervention_by_id(intervention_id=None, encounter_id=None):
     with get_connection() as conn:
         with conn.cursor() as cur:
-            cur.execute("SELECT * FROM interventions WHERE intervention_id = %s", (intervention_id,))
+            if encounter_id:
+                cur.execute("SELECT * FROM interventions WHERE encounter_id = %s", (encounter_id,))
+            elif intervention_id:
+                cur.execute("SELECT * FROM interventions WHERE intervention_id = %s", (intervention_id,))
+            else:
+                return None
+                
             intervention = cur.fetchone()
             return intervention
 

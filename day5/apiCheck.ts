@@ -115,3 +115,21 @@ async function apiCallExecutiveSummary(): Promise<void> {
 }
 
 apiCallExecutiveSummary();
+
+async function apiCallSearchPatient(
+    { patient_number, risk_score, risk_level }:
+    { patient_number?: string; risk_score?: number; risk_level?: string } = {}
+): Promise<void> {
+    const url = new URL(`http://127.0.0.1:3003/searchPatient`);
+    if (patient_number) url.searchParams.append('patient_number', patient_number);
+    if (risk_score !== undefined) url.searchParams.append('risk_score', risk_score.toString());
+    if (risk_level) url.searchParams.append('risk_level', risk_level);
+
+    const response = await fetch(url);
+    console.log(response.status);
+    let data: any = await response.json();
+    console.log(data);
+}
+
+// Example usage:
+apiCallSearchPatient({ risk_level: "HIGH" });

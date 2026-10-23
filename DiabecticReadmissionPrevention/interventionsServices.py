@@ -11,7 +11,7 @@ def get_care_queue_endpoint():
 
 @router.get("/interventions/{intervention_id}", response_model=Intervention)
 def get_intervention_by_id_endpoint(intervention_id: str):
-    intervention = get_intervention_by_id(intervention_id)
+    intervention = get_intervention_by_id(intervention_id=intervention_id)
     if intervention:
         return intervention
     else:
