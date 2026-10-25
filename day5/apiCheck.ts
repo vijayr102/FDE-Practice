@@ -9,7 +9,7 @@ async function apiCallEnconunterID(encounter_id : number): Promise<void> {
     console.log(data);
 }
 
-apiCallEnconunterID(2278392);
+//apiCallEnconunterID(2278392);
 
 async function apiCallEnconunters(): Promise<void> {
     const response = await fetch(`http://127.0.0.1:3003/encounters`);
@@ -19,7 +19,7 @@ async function apiCallEnconunters(): Promise<void> {
     console.log(data.length);
 }
 
-//apiCallEnconunters();
+apiCallEnconunters();
 
 async function  apiCallInterventions(): Promise<void> {
     const response = await fetch(`http://127.0.0.1:3003/care-queue`);
@@ -86,7 +86,7 @@ async function apiCallInterventionById(intervention_id: number): Promise<void> {
     console.log(data);
 }
 
-apiCallInterventionById(6);
+//apiCallInterventionById(6);
 
 
 async function apiCallOperationSummary(): Promise<void> {
@@ -96,7 +96,7 @@ async function apiCallOperationSummary(): Promise<void> {
     console.log(data);
 }
 
-apiCallOperationSummary();
+//apiCallOperationSummary();
 
 async function apiCallReadmissions(): Promise<void> {
     const response = await fetch(`http://127.0.0.1:3003/readmission-risk-analysis`);
@@ -105,7 +105,7 @@ async function apiCallReadmissions(): Promise<void> {
     console.log(data);
 }
 
-apiCallReadmissions();
+// apiCallReadmissions();
 
 async function apiCallExecutiveSummary(): Promise<void> {
     const response = await fetch(`http://127.0.0.1:3003/executive-summary`);
@@ -114,7 +114,7 @@ async function apiCallExecutiveSummary(): Promise<void> {
     console.log(data);
 }
 
-apiCallExecutiveSummary();
+//apiCallExecutiveSummary();
 
 async function apiCallSearchPatient(
     { patient_number, risk_score, risk_level }:
@@ -132,4 +132,4 @@ async function apiCallSearchPatient(
 }
 
 // Example usage:
-apiCallSearchPatient({ risk_level: "HIGH" });
+// apiCallSearchPatient({ risk_level: "HIGH" });

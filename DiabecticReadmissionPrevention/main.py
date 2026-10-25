@@ -8,7 +8,9 @@ app = FastAPI()
 
 origins = [
     "http://localhost:8000",      # Common React/Next.js local port
-    "http://127.0.0.1:8000" # Your production domain
+    "http://127.0.0.1:8000", # Your production domain
+    "http://localhost:5173",      # Common React/Next.js local port
+    "http://127.0.0.1:5173",
 ]
 
 # 2. Add the CORSMiddleware to your application

@@ -1,14 +1,14 @@
 from database import get_connection
 
 
-def get_encounters():
+def get_encounters(limit=10, offset=0):
     with get_connection() as conn:
         with conn.cursor() as cur:
-            cur.execute("SELECT * FROM encounters")
+            cur.execute("SELECT * FROM encounters LIMIT %s OFFSET %s", (limit, offset))
             encounters = cur.fetchall()
             return encounters
 
-def get_encounters(patient_number=None, risk_score=None, risk_level=None):
+def search_encounters(patient_number=None, risk_score=None, risk_level=None):
     with get_connection() as conn:
         with conn.cursor() as cur:
             query = "SELECT * FROM encounters WHERE 1=1"
