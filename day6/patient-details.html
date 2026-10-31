@@ -116,8 +116,8 @@
     </style>
     <script>
         async function fetchPatientDetails() {
-            const urlParams = new URLSearchParams(window.location.search);
-            const patientId = urlParams.get('id');
+            
+            
             if (!patientId) {
                 document.getElementById('patient-details').innerHTML = '<p>No patient ID provided.</p>';
                 return;

@@ -7,3 +7,23 @@ tr
 {
   border-bottom: 1px solid #ddd;
 }
+.search-form,.search-section
+{
+  margin-bottom: 20px;
+  background-color: #452a2a;
+  border-radius: 10px;
+}
+.search-form,.search-section input[type="text"] {
+  padding: 8px;
+  width: 200px;
+  margin-right: 10px;
+}
+.search-form,.search-section button {
+  padding: 8px 16px;
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+}
+.search-form,.search-section label {
+  margin-right: 10px;
+}

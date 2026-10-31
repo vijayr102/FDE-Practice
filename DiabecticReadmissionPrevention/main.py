@@ -4,6 +4,8 @@ from interventionsServices import router as interventions_router
 from encountersServices import router as encounters_router
 from fastapi.middleware.cors import CORSMiddleware
 
+ 
+
 app = FastAPI()
 
 origins = [
@@ -18,7 +20,8 @@ app.add_middleware(
     CORSMiddleware,
     allow_origins=origins,            # Allows specific origins
     allow_credentials=True,           # Allows cookies, authorization headers, or SSL certs
-    allow_methods=["*"],              # Allows all HTTP methods (GET, POST, PUT, DELETE, OPTIONS, etc.)
+    allow_methods=["*"],              
+    # Allows all HTTP methods (GET, POST, PUT, DELETE, OPTIONS, etc.)
     allow_headers=["*"],              # Allows all standard and custom request headers
 )
 

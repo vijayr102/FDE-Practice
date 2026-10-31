@@ -20,6 +20,7 @@ export function patientTable({ encounters, onNext, onPrevious, hasNext, hasPrevi
             <th>Age</th>
             <th>Risk Level</th>
             <th>Risk Score</th>
+            <th>Readmitted</th>
           </tr>
         </thead>
         <tbody>
